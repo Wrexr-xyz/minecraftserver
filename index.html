@@ -1,42 +1,31 @@
-<?php
-    // Edit this ->
-    define( 'MQ_SERVER_ADDR', '212.130.81.88' );
-    define( 'MQ_SERVER_PORT', 25565 );
-    define( 'MQ_TIMEOUT', 1 );
-    // Edit this <-
+<!DOCTYPE html>
+<html lang="en">
 
-    // Display everything in browser, because some people can't look in logs for errors
-    Error_Reporting( E_ALL | E_STRICT );
-    Ini_Set( 'display_errors', false );
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
 
-    require __DIR__ . '/MinecraftQuery.class.php';
+<body>
+    <?php
+$resource = file_get_contents("http://212.130.81.88:26:25565/up/world/world_plotworld/".Time());
+$resource = mb_convert_encoding($resource, "HTML-ENTITIES", "UTF-8");
+$resource = json_decode($resource, TRUE);
 
-    $Timer = MicroTime( true );
+echo '<h2>Players online: ', $resource["currentcount"], '/300</h2>';
+for ($i = 0 ; $i < $resource["currentcount"]; $i++) {
+    echo $resource["players"][$i]["account"], '<br>';
+}
+?>
+    username: $resource["players"][$i]["account"]
+    display name*: $resource["players"][$i]["name"]
+    world: $resource["players"][$i]["world"]
+    x: $resource["players"][$i]["x"]
+    y: $resource["players"][$i]["y"]
+    z: $resource["players"][$i]["z"]
+    health**: $resource["players"][$i]["health"]
+    armour**: $resource["players"][$i]["armour"]
+</body>
 
-    $ServerQuery = new MinecraftQuery( );
-
-    try
-    {
-        $ServerQuery->Connect( MQ_SERVER_ADDR, MQ_SERVER_PORT, MQ_TIMEOUT );
-    }
-    catch( MinecraftQueryException $e )
-    {
-        $Exception = $e;
-    }
-
-    $Timer = Number_Format( MicroTime( true ) - $Timer, 4, '.', '' );
-
-    $serverInfo = $ServerQuery->GetInfo();
-    ?>
-
-Players Online:
-<?php echo $serverInfo['Players'] . "/" . $serverInfo['MaxPlayers']; ?>
-<?php
-    if ( ( $Players = $ServerQuery->GetPlayers( ) ) !== false ) {
-        foreach($Players as $Player){
-                echo "<img width='64' height='64' src='http://cravatar.eu/head/".$Player."/64.png' />";
-            }
-    }  else {
-        echo "Nobodys online!";
-        }
-    ?>
+</html>
