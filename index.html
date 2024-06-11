@@ -102,7 +102,7 @@
 
                 const playerInfo = document.createElement('span');
                 const onlineDuration = player.onlineSince ? getOnlineDuration(player.onlineSince) : "Unknown";
-                playerInfo.textContent = `${player.name} - Online tid: ${player.onlineDuration}`;
+                playerInfo.textContent = `${player.name} - Online tid: ${onlineDuration}`;
 
                 playerDiv.appendChild(avatarImg);
                 playerDiv.appendChild(playerInfo);
