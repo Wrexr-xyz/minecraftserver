@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: rgba(0% 0% 0%, 0);
             color: #333;
             text-align: center;
             padding: 20px;
@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <h4>Minecraft Server Status</h1>
+    <h1>Minecraft Server Status</h1>
     <div id="server-status" class="server-status">
         <!-- Server status will be displayed here -->
     </div>
@@ -102,7 +102,7 @@
 
                 const playerInfo = document.createElement('span');
                 const onlineDuration = player.onlineSince ? getOnlineDuration(player.onlineSince) : "Unknown";
-                playerInfo.textContent = ``;
+                playerInfo.textContent = `${player.name}`;
 
                 playerDiv.appendChild(avatarImg);
                 playerDiv.appendChild(playerInfo);
