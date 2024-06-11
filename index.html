@@ -30,6 +30,7 @@
     <div>212.130.81.88:25565</div>
     <br>
     <div id="rest"></div>
+    <br>
     <div id="rest1"></div>
     <ul id="player-list"></ul>
   </div>
@@ -52,8 +53,8 @@
           playerList += '</ul>';
         }
 
-        $('#rest').html(r.description.replace(/§(.+?)/gi, '') + '<br><b>Players Online:</b> ' + r.players.online);
-        $('#rest1').html('<br><b>Players:</b>');
+        $('#rest').html(r.description.replace(/§(.+?)/gi, '') + '<br>Players Online: ' + r.players.online);
+        $('#rest1').html('<br>Players:');
         $('#player-list').html(playerList);
       });
     }
