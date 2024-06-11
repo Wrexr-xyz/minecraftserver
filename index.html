@@ -23,62 +23,111 @@
             height: 32px;
             margin-right: 10px;
         }
+        .server-status {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Minecraft Server Status</h1>
+    <div id="server-status" class="server-status">
+        <!-- Server status will be displayed here -->
+    </div>
+    <div id="player-count">
+        <!-- Number of players online will be displayed here -->
+    </div>
     <div id="player-list">
         <!-- Player info will be appended here -->
     </div>
 
     <script>
-      // Function to fetch Minecraft server status from Minetools API
-function fetchServerStatus() {
-    const host = '212.130.81.88'; // Replace with your server's IP
-    const port = '25565'; // Replace with your server's port if different
+        // Function to fetch Minecraft server status from Minetools API
+        function fetchServerStatus() {
+            const host = '212.130.81.88'; // Replace with your server's IP
+            const port = '25565'; // Replace with your server's port if different
 
-    fetch(`https://api.minetools.eu/ping/${host}/${port}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error('Error fetching server status:', data.error);
-                return;
-            }
-            renderPlayerList(data.players.sample || []);
-        })
-        .catch(error => console.error('Error fetching server status:', error));
-}
+            fetch(`https://api.minetools.eu/ping/${host}/${port}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('server-status').textContent = 'Server Status: Offline';
+                        document.getElementById('server-status').style.color = 'red';
+                        console.error('Error fetching server status:', data.error);
+                        return;
+                    }
 
-// Function to fetch player avatars using their UUID
-function getAvatarUrl(uuid) {
-    return `https://crafatar.com/avatars/${uuid}?size=32&default=MHF_Steve&overlay=true`;
-}
+                    document.getElementById('server-status').textContent = 'Server Status: Online';
+                    document.getElementById('server-status').style.color = 'green';
 
-// Function to render player list
-function renderPlayerList(players) {
-    const playerList = document.getElementById('player-list');
-    playerList.innerHTML = ''; // Clear existing content
+                    renderPlayerList(data.players.sample || []);
+                })
+                .catch(error => {
+                    document.getElementById('server-status').textContent = 'Server Status: Offline';
+                    document.getElementById('server-status').style.color = 'red';
+                    console.error('Error fetching server status:', error);
+                });
+        }
 
-    players.forEach(player => {
-        const playerDiv = document.createElement('div');
-        playerDiv.classList.add('player');
+        // Function to fetch player avatars using their UUID
+        function getAvatarUrl(uuid) {
+            return `https://crafatar.com/avatars/${uuid}?size=32&overlay=true`;
+        }
 
-        const avatarImg = document.createElement('img');
-        avatarImg.src = getAvatarUrl(player.id);
-        avatarImg.alt = player.name;
+        // Function to calculate how long a player has been online
+        function getOnlineDuration(onlineSince) {
+            const now = new Date();
+            const onlineSinceDate = new Date(onlineSince);
+            const diff = now - onlineSinceDate;
 
-        const playerInfo = document.createElement('span');
-        playerInfo.textContent = player.name;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            return `${hours} hours, ${minutes} minutes`;
+        }
 
-        playerDiv.appendChild(avatarImg);
-        playerDiv.appendChild(playerInfo);
-        playerList.appendChild(playerDiv);
-    });
-}
+        // Mock API data generator for demonstration
+        function mockApiData() {
+            const players = [
+                { id: "player1-uuid", name: "PlayerOne" },
+                { id: "player2-uuid", name: "PlayerTwo" }
+            ];
 
-// Fetch server status when the page loads
-document.addEventListener('DOMContentLoaded', fetchServerStatus);
+            return players.map(player => {
+                // Generate a random timestamp within the last 2 hours
+                const now = new Date();
+                const pastTime = new Date(now.getTime() - Math.random() * 2 * 60 * 60 * 1000);
+                player.onlineSince = pastTime.toISOString();
+                return player;
+            });
+        }
 
+        // Function to render player list
+        function renderPlayerList(players) {
+            const playerList = document.getElementById('player-list');
+            playerList.innerHTML = ''; // Clear existing content
+
+            const playerCount = players.length;
+            document.getElementById('player-count').textContent = `Players Online: ${playerCount}`;
+
+            players.forEach(player => {
+                const playerDiv = document.createElement('div');
+                playerDiv.classList.add('player');
+
+                const avatarImg = document.createElement('img');
+                avatarImg.src = getAvatarUrl(player.id);
+                avatarImg.alt = player.name;
+
+                const playerInfo = document.createElement('span');
+                const onlineDuration = getOnlineDuration(player.onlineSince);
+                playerInfo.textContent = `${player.name} - Online for ${onlineDuration}`;
+
+                playerDiv.appendChild(avatarImg);
+                playerDiv.appendChild(playerInfo);
+                playerList.appendChild(playerDiv);
+            });
+        }
+
+        // Fetch server status when the page loads
+        document.addEventListener('DOMContentLoaded', fetchServerStatus);
     </script>
 </body>
 </html>
