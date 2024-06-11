@@ -90,7 +90,7 @@
             playerList.innerHTML = ''; // Clear existing content
 
             const playerCount = players.length;
-            document.getElementById('player-count').textContent = `Players Online: ${playerCount}`;
+            document.getElementById('player-count').textContent = `Spillere Online: ${playerCount}`;
 
             players.forEach(player => {
                 const playerDiv = document.createElement('div');
@@ -101,8 +101,8 @@
                 avatarImg.alt = player.name;
 
                 const playerInfo = document.createElement('span');
-                const onlineDuration = player.onlineSince ? getOnlineDuration(player.onlineSince) : "Unknown";
-                playerInfo.textContent = `${player.name} - Online for: ${onlineDuration}`;
+                const onlineDuration = player.onlineSince ? getOnlineDuration(player.onlineSince) : "Ukendt";
+                playerInfo.textContent = `${player.name} - SpilleTid: ${onlineDuration}`;
 
                 playerDiv.appendChild(avatarImg);
                 playerDiv.appendChild(playerInfo);
