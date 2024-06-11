@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Server Status </title>
+    <title>Minecraft Server Status</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,22 +82,6 @@
             const hours = Math.floor(diff / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
             return `${hours} hours, ${minutes} minutes`;
-        }
-
-        // Mock API data generator for demonstration
-        function mockApiData() {
-            const players = [
-                { id: "player1-uuid", name: "PlayerOne" },
-                { id: "player2-uuid", name: "PlayerTwo" }
-            ];
-
-            return players.map(player => {
-                // Generate a random timestamp within the last 2 hours
-                const now = new Date();
-                const pastTime = new Date(now.getTime() - Math.random() * 2 * 60 * 60 * 1000);
-                player.onlineSince = pastTime.toISOString();
-                return player;
-            });
         }
 
         // Function to render player list
