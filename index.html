@@ -101,7 +101,7 @@
                 avatarImg.alt = player.name;
 
                 const playerInfo = document.createElement('span');
-                const onlineDuration = getOnlineDuration(player.onlineSince);
+                const onlineDuration = player.onlineSince ? getOnlineDuration(player.onlineSince) : "Unknown";
                 playerInfo.textContent = `${player.name} - Online for ${onlineDuration}`;
 
                 playerDiv.appendChild(avatarImg);
