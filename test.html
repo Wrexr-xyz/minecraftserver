@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .player {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .player img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Minecraft Server Status</h1>
+    <div id="player-list">
+        <!-- Player info will be appended here -->
+    </div>
+
+    <script>
+      // Mock API data for demonstration
+const mockApiData = [
+    {
+        uuid: "player1-uuid",
+        name: "PlayerOne",
+        onlineSince: "2024-06-11T12:00:00Z"
+    },
+    {
+        uuid: "player2-uuid",
+        name: "PlayerTwo",
+        onlineSince: "2024-06-11T12:30:00Z"
+    }
+];
+
+// Function to fetch player avatars using their UUID
+function getAvatarUrl(uuid) {
+    return `https://crafatar.com/avatars/${uuid}?size=32&default=MHF_Steve&overlay=true`;
+}
+
+// Function to calculate how long a player has been online
+function getOnlineDuration(onlineSince) {
+    const now = new Date();
+    const onlineSinceDate = new Date(onlineSince);
+    const diff = now - onlineSinceDate;
+
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 6000);
+    return `${hours} hours, ${minutes} minutes`;
+}
+
+// Function to render player list
+function renderPlayerList(players) {
+    const playerList = document.getElementById('player-list');
+    playerList.innerHTML = ''; // Clear existing content
+
+    players.forEach(player => {
+        const playerDiv = document.createElement('div');
+        playerDiv.classList.add('player');
+
+        const avatarImg = document.createElement('img');
+        avatarImg.src = getAvatarUrl(player.uuid);
+        avatarImg.alt = player.name;
+
+        const playerInfo = document.createElement('span');
+        playerInfo.textContent = `${player.name} - Online for ${getOnlineDuration(player.onlineSince)}`;
+
+        playerDiv.appendChild(avatarImg);
+        playerDiv.appendChild(playerInfo);
+        playerList.appendChild(playerDiv);
+    });
+}
+
+// Simulate fetching data from an API
+function fetchPlayerData() {
+    // In a real-world scenario, you would fetch data from an actual API like this:
+    // fetch('https://api.your-minecraft-server.com/players')
+    //     .then(response => response.json())
+    //     .then(data => renderPlayerList(data));
+
+    // For this example, we'll use mock data
+    renderPlayerList(mockApiData);
+}
+
+// Fetch player data when the page loads
+document.addEventListener('DOMContentLoaded', fetchPlayerData);
+
+    </script>
+</body>
+</html>
