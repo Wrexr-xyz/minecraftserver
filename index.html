@@ -11,14 +11,12 @@
   html {
     margin: 0;
     padding: 0;
-    text-align: center;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
-    font-size: 20px;
   }
 
   body {
-    background: rgba(0, 0, 0, 0);
+    background: black;
     color: white;
+    text-align: center;
   }
 
   ul,
@@ -29,8 +27,7 @@
 
 <body>
   <div id="server-info">
-    <br>
-    <div style="">212.130.81.88:25565</div>
+    <div>212.130.81.88:25565</div>
     <br>
     <div id="rest"></div>
     <div id="rest1"></div>
@@ -38,27 +35,34 @@
   </div>
 
   <script>
-    var url = "https://api.minetools.eu/ping/212.130.81.88:25565/25565";
-    $.getJSON(url, function (r) {
-      if (r.error) {
-        $('#rest').html('Server Offline');
-        return false;
-      }
+    function fetchServerInfo() {
+      var url = "https://api.minetools.eu/ping/212.130.81.88:25565/25565";
+      $.getJSON(url, function (r) {
+        if (r.error) {
+          $('#rest').html('Server Offline');
+          return false;
+        }
 
-      var playerList = '';
-      if (r.players.sample) {
-        playerList = '<ul>';
-        r.players.sample.forEach(function (player) {
-          playerList += '<li>' + player.name + '</li><br>';
-        });
-        playerList += '</ul>';
-      }
+        var playerList = '';
+        if (r.players.sample) {
+          playerList = '<ul>';
+          r.players.sample.forEach(function (player) {
+            playerList += '<li>' + player.name + '</li><br>';
+          });
+          playerList += '</ul>';
+        }
 
-      $('#rest').html(r.description.replace(/§(.+?)/gi, '') + '<br><b>Players Online:</b> ' + r.players.online);
-      $('#favicon').attr('src', r.favicon);
-      $('#rest1').html('<br><b>Players:</b>');
-      $('#player-list').html(playerList);
-    });
+        $('#rest').html(r.description.replace(/§(.+?)/gi, '') + '<br><b>Players Online:</b> ' + r.players.online);
+        $('#rest1').html('<br><b>Players:</b>');
+        $('#player-list').html(playerList);
+      });
+    }
+
+    // Fetch server info immediately when the page loads
+    fetchServerInfo();
+
+    // Set an interval to fetch server info every 30 seconds (30000 milliseconds)
+    setInterval(fetchServerInfo, 1000);
   </script>
 </body>
 
