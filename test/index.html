@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft Server Status</title>
     <style>
-        html, body {
+        body {
             font-family: Arial, sans-serif;
-            background-color: rgb(0 98% 2% 0%);
-            color: #333;
+            background-color: #000;
+            color: #fff;
             text-align: center;
-            padding: 20px;
+            padding: 10px;
         }
         .player {
             display: flex;
@@ -23,12 +23,35 @@
             height: 32px;
             margin-right: 10px;
         }
+        .server-status {
+            margin-bottom: 20px;
+        }
+        .status-div {
+            width: 25%;
+            height: 100vh;
+        }
+        .iframe-div {
+            width: 75%;
+            height: 100vh;
+        }
     </style>
 </head>
 <body>
-    <h1>Minecraft Server Status</h1>
-    <div id="player-list">
-        <!-- Player info will be appended here -->
+    <div class="status-div">
+        <p style="margin-bottom: 5px;">212.130.81.88:25565</p>
+        <div id="server-status" class="server-status">
+            <!-- Server status will be displayed here -->
+        </div>
+        <div id="player-count">
+            <!-- Number of players online will be displayed here -->
+        </div>
+        <br>
+        <div id="player-list">
+            <!-- Player info will be appended here -->
+        </div>
+    </div>
+    <div class="iframe-div">
+        <iframe src="https://nikolajalbrechtsen.com:8443/panel/server_detail?id=f568c5cc-3321-4042-986c-533bb9a20246"></iframe>
     </div>
 
     <script>
@@ -41,12 +64,22 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
+                        document.getElementById('server-status').textContent = 'Server Status: Offline';
+                        document.getElementById('server-status').style.color = 'red';
                         console.error('Error fetching server status:', data.error);
                         return;
                     }
+
+                    document.getElementById('server-status').textContent = 'Server Status: Online';
+                    document.getElementById('server-status').style.color = 'green';
+
                     renderPlayerList(data.players.sample || []);
                 })
-                .catch(error => console.error('Error fetching server status:', error));
+                .catch(error => {
+                    document.getElementById('server-status').textContent = 'Server Status: Offline';
+                    document.getElementById('server-status').style.color = 'red';
+                    console.error('Error fetching server status:', error);
+                });
         }
 
         // Function to fetch player avatars using their UUID
@@ -70,6 +103,9 @@
             const playerList = document.getElementById('player-list');
             playerList.innerHTML = ''; // Clear existing content
 
+            const playerCount = players.length;
+            document.getElementById('player-count').textContent = `Spillere Online: ${playerCount}`;
+
             players.forEach(player => {
                 const playerDiv = document.createElement('div');
                 playerDiv.classList.add('player');
@@ -79,6 +115,7 @@
                 avatarImg.alt = player.name;
 
                 const playerInfo = document.createElement('span');
+                const onlineDuration = player.onlineSince ? getOnlineDuration(player.onlineSince) : "Ukendt";
                 playerInfo.textContent = `${player.name}`;
 
                 playerDiv.appendChild(avatarImg);
@@ -87,8 +124,15 @@
             });
         }
 
+        // Function to periodically fetch server status
+        function fetchServerStatusPeriodically() {
+            fetchServerStatus();
+            setInterval(fetchServerStatus, 1000); // Fetch every 1 seconds
+        }
+
         // Fetch server status when the page loads
-        document.addEventListener('DOMContentLoaded', fetchServerStatus);
+        document.addEventListener('DOMContentLoaded', fetchServerStatusPeriodically);
     </script>
+    
 </body>
 </html>
