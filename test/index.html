@@ -27,32 +27,32 @@
             margin-bottom: 20px;
         }
         .status-div {
-            display: block;
-            width: 25vh;
+            display: flex;
             height: 100vh;
         }
         .iframe-div {
             display: flex;
-            width: 75vh;
             height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div class="iframe-div">
-        <iframe src="https://nikolajalbrechtsen.com:8443/panel/server_detail?id=f568c5cc-3321-4042-986c-533bb9a20246"></iframe>
-    </div>
-    <div class="status-div">
-        <p style="margin-bottom: 5px;">212.130.81.88:25565</p>
-        <div id="server-status" class="server-status">
-            <!-- Server status will be displayed here -->
+    <div style="display: flex; width: 100%; height: 100vh;">
+        <div style="width: 75%; height: 100vh;">
+            <iframe src="https://nikolajalbrechtsen.com:8443/panel/server_detail?id=f568c5cc-3321-4042-986c-533bb9a20246"></iframe>
         </div>
-        <div id="player-count">
-            <!-- Number of players online will be displayed here -->
-        </div>
-        <br>
-        <div id="player-list">
-            <!-- Player info will be appended here -->
+        <div style="width: 25%; height: 100vh;">
+            <p style="margin-bottom: 5px;">212.130.81.88:25565</p>
+            <div id="server-status" class="server-status">
+                <!-- Server status will be displayed here -->
+            </div>
+            <div id="player-count">
+                <!-- Number of players online will be displayed here -->
+            </div>
+            <br>
+            <div id="player-list">
+                <!-- Player info will be appended here -->
+            </div>
         </div>
     </div>
 
